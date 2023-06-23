@@ -51,6 +51,11 @@ app.get('/tweets', (req, res) => {
 
 app.post('/sign-up', (req, res) => {
     const {username, avatar} = req.body;
+
+    if (!username || !avatar || typeof(username) !== 'string'|| typeof(avatar) !== 'string') {
+        res.status(400).send('Todos os campos são obrigatórios!');
+    }
+
     const newUser = {
         username, 
         avatar
@@ -62,9 +67,14 @@ app.post('/sign-up', (req, res) => {
 
 app.post('/tweets', (req, res) => {
     const {username, tweet} = req.body;
-    
+
     if (!usersList.some(user => user.username === username)) {
-        res.send('UNAUTHORIZED');
+        res.status(401).send('UNAUTHORIZED');
+        return
+    }
+
+    if (!username || !tweet || typeof(username) !== 'string'|| typeof(tweet) !== 'string') {
+        res.status(400).send('Todos os campos são obrigatórios!');
         return
     }
 
@@ -76,4 +86,19 @@ app.post('/tweets', (req, res) => {
     tweetsList.push(newTweet);
 
     res.status(201).send('OK');
+});
+
+app.get('/tweets/:USERNAME', (req,res) => {
+    const {USERNAME} = req.params;
+    const tweets = tweetsList.filter(tweets => tweets.username === USERNAME);
+    const avatar = findAvatarByUsername(USERNAME);
+    const list = tweets.map(msg => {
+        return {
+            username: msg.username,
+            avatar,
+            tweet: msg.tweet
+        }
+    });
+
+    res.send(list);
 })
