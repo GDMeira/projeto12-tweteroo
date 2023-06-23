@@ -1,6 +1,9 @@
 import express from 'express';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 const PORT = 5000;
 
 const usersList = [];
@@ -45,3 +48,32 @@ app.get('/tweets', (req, res) => {
 
     res.send(list);
 });
+
+app.post('/sign-up', (req, res) => {
+    const {username, avatar} = req.body;
+    const newUser = {
+        username, 
+        avatar
+    };
+    usersList.push(newUser);
+
+    res.status(201).send('OK');
+})
+
+app.post('/tweets', (req, res) => {
+    const {username, tweet} = req.body;
+    
+    if (!usersList.some(user => user.username === username)) {
+        res.send('UNAUTHORIZED');
+        return
+    }
+
+    const newTweet = {
+        username,
+        tweet
+    };
+
+    tweetsList.push(newTweet);
+
+    res.status(201).send('OK');
+})
