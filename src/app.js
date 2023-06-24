@@ -34,6 +34,10 @@ function getTweets(init, end) {
 function findAvatarByUsername(name) {
     const user = usersList.find(u => u.username === name);
 
+    if (!user) {
+        return undefined
+    }
+
     return user.avatar
 }
 
@@ -44,7 +48,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/tweets', (req, res) => {
-    const list = getTweets(0, 9);
+    const {page} = req.query;
+    let [init, end] = [0, 9];
+    
+    if (page) {
+        init = (page - 1) * 10;
+        end = page * 10 - 1;
+    }
+
+    const list = getTweets(init, end);
 
     res.send(list);
 });
@@ -66,7 +78,8 @@ app.post('/sign-up', (req, res) => {
 })
 
 app.post('/tweets', (req, res) => {
-    const {username, tweet} = req.body;
+    const {tweet} = req.body;
+    const username = req.headers.user;
 
     if (!usersList.some(user => user.username === username)) {
         res.status(401).send('UNAUTHORIZED');
