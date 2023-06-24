@@ -50,6 +50,11 @@ app.get('/', (req, res) => {
 app.get('/tweets', (req, res) => {
     const {page} = req.query;
     let [init, end] = [0, 9];
+
+    if (page < 1) {
+        res.status(400).send('Informe uma página válida!');
+        return
+    }
     
     if (page) {
         init = (page - 1) * 10;
