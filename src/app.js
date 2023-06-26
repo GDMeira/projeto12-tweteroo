@@ -13,7 +13,7 @@ function getTweets(init, end) {
     const tweets = [];
 
     if (init > tweetsList.length || tweetsList.length === 0) {
-        return tweets
+        return tweets;
     } else if (end > tweetsList.length) {
         end = tweetsList.length - 1;
     }
@@ -28,17 +28,17 @@ function getTweets(init, end) {
         tweets.push(message);
     }
 
-    return tweets
+    return tweets;
 }
 
 function findAvatarByUsername(name) {
     const user = usersList.find(u => u.username === name);
 
     if (!user) {
-        return undefined
+        return undefined;
     }
 
-    return user.avatar
+    return user.avatar;
 }
 
 app.listen(PORT, () => `Rodando servidor na porta ${PORT}`);
@@ -53,7 +53,7 @@ app.get('/tweets', (req, res) => {
 
     if (page < 1) {
         res.status(400).send('Informe uma página válida!');
-        return
+        return;
     }
     
     if (page) {
@@ -88,12 +88,12 @@ app.post('/tweets', (req, res) => {
 
     if (!usersList.some(user => user.username === username)) {
         res.status(401).send('UNAUTHORIZED');
-        return
+        return;
     }
 
     if (!username || !tweet || typeof(username) !== 'string'|| typeof(tweet) !== 'string') {
         res.status(400).send('Todos os campos são obrigatórios!');
-        return
+        return;
     }
 
     const newTweet = {
